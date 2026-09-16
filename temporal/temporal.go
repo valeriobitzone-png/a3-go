@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Part of the A3 universe. See LICENSE.
 // Package temporal implements SPEC_A3-EP §5: four instants, order, history, fold.
 package temporal
 

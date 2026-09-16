@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Part of the A3 universe. See LICENSE.
 // Package truth implements SPEC_A3-EP §3–4 truth class, provenance, and promotion.
 package truth
 

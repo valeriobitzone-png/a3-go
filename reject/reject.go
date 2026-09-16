@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Part of the A3 universe. See LICENSE.
 // Package reject is the explicit failure type for CORE MUST / MUST NOT.
 package reject
 
