@@ -20,7 +20,12 @@ It is not a port of Kotlin or TypeScript source, not an A3UI renderer, and not a
 ```bash
 git clone https://github.com/valeriobitzone-png/a3-go.git
 cd a3-go
-# Requirements: Go 1.22+
+# Requirements: Go 1.22+.
+# GO-009 checks these pinned sibling repositories for a clean boundary:
+git clone https://github.com/valeriobitzone-png/a3.git ../a3
+git -C ../a3 checkout closeout-v1.0
+git clone https://github.com/valeriobitzone-png/a3-ts.git ../a3-ts
+git -C ../a3-ts checkout prepub-v1.0
 ```
 
 Structure: `envelope/`, `jcs/`, `temporal/`, `truth/`, `confidence/`, `reject/`, and `conformance/`. Runtime dependencies are standard library only.
@@ -35,7 +40,7 @@ Expected result: all packages pass and the shared lock-vector SHA-256 values mat
 
 ## Integrate it
 
-Treat this repository as a reference implementation. Read `../a3/spec/SPEC_A3-EP.md`, reuse the conformance tests as a template for your language, and verify your own envelopes against the shared vectors. Do not copy implementation code.
+Treat this repository as a reference implementation. Keep the documented `../a3` and `../a3-ts` siblings at their pinned tags, read `../a3/spec/SPEC_A3-EP.md`, reuse the conformance tests as a template for your language, and verify your own envelopes against the shared vectors. Do not copy implementation code.
 
 ## License
 
