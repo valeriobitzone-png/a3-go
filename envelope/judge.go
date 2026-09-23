@@ -41,7 +41,7 @@ func JudgeFile(raw []byte) error {
 		if err := truth.RejectSandboxFact(c.Class, truth.Environment(stringsToLower(env))); err != nil {
 			return err
 		}
-		return reject.New("CF-002", "fixture did not claim FACT on SANDBOX")
+		return errors.New("CF-002 fixture did not claim FACT on SANDBOX")
 	case "CF-003":
 		claimed, _ := root["claimed"].(map[string]any)
 		class, _ := claimed["truth_class"].(string)
@@ -49,7 +49,7 @@ func JudgeFile(raw []byte) error {
 		if err := truth.RejectPromotionWithoutVerification(c.Class, root["verification"]); err != nil {
 			return err
 		}
-		return reject.New("CF-003", "fixture did not claim FACT without verification")
+		return errors.New("CF-003 fixture did not claim FACT without verification")
 	case "CF-004":
 		event, _ := root["event"].(map[string]any)
 		_, err := ParseMap(event)
@@ -59,14 +59,14 @@ func JudgeFile(raw []byte) error {
 			}
 			return err
 		}
-		return reject.New("CF-004", "implementation accepted attester_id = requester_id")
+		return errors.New("CF-004 implementation accepted attester_id = requester_id")
 	case "CF-005":
 		class, _ := root["truth_class"].(string)
 		c, _ := truth.ParseBearer(map[string]any{"truth_class": class, "provenance": "inferred"})
 		if err := truth.RejectInventedUnknown(c.Class, root["proposition"]); err != nil {
 			return err
 		}
-		return reject.New("CF-005", "fixture is not UNKNOWN with a proposition")
+		return errors.New("CF-005 fixture is not UNKNOWN with a proposition")
 	case "CF-006":
 		claimed, _ := root["claimed"].(map[string]any)
 		replaces, _ := claimed["replaces_history"].(bool)
@@ -74,7 +74,7 @@ func JudgeFile(raw []byte) error {
 		if replaces || (hist != nil && len(hist) == 0) {
 			return reject.New("CF-006", "fold applied to causal history (not confidence/projection)")
 		}
-		return reject.New("CF-006", "fixture did not replace history")
+		return errors.New("CF-006 fixture did not replace history")
 	case "CF-007":
 		vec, err := confidence.ParseVector(asMap(root["vector"]))
 		if err != nil {
@@ -93,7 +93,7 @@ func JudgeFile(raw []byte) error {
 		if err := confidence.RejectCompensatingMean(claimed, lawful, agg); err != nil {
 			return err
 		}
-		return reject.New("CF-007", "fixture matched weighted min")
+		return errors.New("CF-007 fixture matched weighted min")
 	case "CF-008":
 		event, _ := root["event"].(map[string]any)
 		_, err := ParseMap(event)
@@ -103,7 +103,7 @@ func JudgeFile(raw []byte) error {
 			}
 			return err
 		}
-		return reject.New("CF-008", "implementation accepted envelope id ≠ SHA-256(JCS(payload))")
+		return errors.New("CF-008 implementation accepted envelope id ≠ SHA-256(JCS(payload))")
 	case "CF-009":
 		input, err := temporal.RowsFromAny(root["input"])
 		if err != nil {
@@ -125,7 +125,7 @@ func JudgeFile(raw []byte) error {
 		if !ok {
 			return reject.New("CF-009", "order without tie-break (source_id, seq)")
 		}
-		return reject.New("CF-009", "fixture already used the protocol order")
+		return errors.New("CF-009 fixture already used the protocol order")
 	default:
 		return reject.New("CF-UNKNOWN", "unknown reject_code "+code)
 	}

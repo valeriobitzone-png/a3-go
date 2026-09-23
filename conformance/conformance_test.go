@@ -404,3 +404,34 @@ func permute(rows []temporal.Observation) [][]temporal.Observation {
 	}
 	return out
 }
+
+// GO-011: silence is not a pass. A fixture that does NOT violate its rule
+// must not come back as that rule's reject (before 2026-09-23 JudgeFile
+// returned the CF code in both cases, so CF-002..009 could pass vacuously).
+func TestGO011_SilenceIsNotAPass(t *testing.T) {
+	cases := []struct {
+		file  string
+		patch func(m map[string]any)
+	}{
+		{"receipt-fact-violation.json", func(m map[string]any) { m["claimed"].(map[string]any)["truth_class"] = "OBSERVATION" }},
+		{"sandbox-fact-violation.json", func(m map[string]any) { m["claimed"].(map[string]any)["truth_class"] = "OBSERVATION" }},
+		{"hypothesis-promotion-violation.json", func(m map[string]any) { m["claimed"].(map[string]any)["truth_class"] = "HYPOTHESIS" }},
+		{"unknown-invention-violation.json", func(m map[string]any) { m["proposition"] = nil }},
+	}
+	for _, c := range cases {
+		var m map[string]any
+		if err := json.Unmarshal(read(t, "conformance", "fixtures", c.file), &m); err != nil {
+			t.Fatal(err)
+		}
+		c.patch(m)
+		raw, _ := json.Marshal(m)
+		err := envelope.JudgeFile(raw)
+		if e := reject.As(err); e != nil {
+			t.Fatalf("GO-011 %s: lawful variant rejected as %s", c.file, e.Code)
+		}
+		if err == nil {
+			t.Fatalf("GO-011 %s: judge returned nil (silence)", c.file)
+		}
+	}
+	t.Log("PASS GO-011 lawful variants are not rejected")
+}
