@@ -1,0 +1,16 @@
+# Public boundary exceptions: <RULE> <path-glob-or-sha> # reason
+PB-008 989825a50e0bdac8e53f2a992d70e3bf77de220b # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 7a2f2f9503e1671d5e32903159bddc4fbc64c5eb # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 2ca8e712df569cc95c92fff86b40b67b25d1782b # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 967ac4c15ab0d27a06ec8f2e025ec0056525c2dc # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 64d4c4dc5f99ea726bdbff68a0154f68b5643936 # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 7eaea299c2e219830aa265f376bb1a776a3ff9d4 # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 656264deeae705179d9d1b70b17bbcc9c0c5ce58 # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 9bd785c1a650acf054a31ce850aeaab3a2607733 # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 2f4e4a7786429ff40effdbd320a09073c12855ce # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 9a2d8d2e1c1364c8d711d206e19f88942b5b7d7b # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 17911cede477469ea266b777abfefe94abcbdb6d # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 05ca1aa096c299029ad46c467179a37e6e9e369b # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 4dd335b7e5d6a61032937121a2002b2f8aee6ed1 # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 55c7bf18037d9fa4917a50fe709c2ae51f2c9c9c # commit anteriore al 23 set 2026: a3-go non viene riscritto per decisione del proprietario (preserva v0.2.0)
+PB-008 b3755fc606a5aaba2505c53c8f7de4b36160a53e # tag annotato v0.2.0: non si modifica per decisione del proprietario

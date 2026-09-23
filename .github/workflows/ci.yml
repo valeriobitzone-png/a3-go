@@ -17,3 +17,16 @@ jobs:
       - name: Clone pinned sibling a3-ts
         run: git clone --depth 1 --branch prepub-v1.0 https://github.com/valeriobitzone-png/a3-ts.git "$GITHUB_WORKSPACE/../a3-ts"
       - run: go test ./...
+
+  public-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch the public boundary guard from a3 main
+        run: git clone --depth 1 https://github.com/valeriobitzone-png/a3.git "$RUNNER_TEMP/a3-guard"
+      - name: Public boundary guard (tree and full history)
+        run: |
+          python3 "$RUNNER_TEMP/a3-guard/tools/public_boundary.py" --root .
+          python3 "$RUNNER_TEMP/a3-guard/tools/public_boundary.py" --root . --history
