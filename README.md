@@ -41,7 +41,25 @@ go test ./...
 
 ### Integrate it
 
-Read `../a3/spec/SPEC_A3-EP.md`, keep the pinned sibling repositories at their stated tags, use the conformance tests as a template, and verify your own envelopes against the shared vectors. Do not copy implementation code.
+```bash
+go get github.com/valeriobitzone-png/a3-go@main
+```
+
+```go
+import "github.com/valeriobitzone-png/a3-go/truth"
+
+// whatever your tool answered is a receipt: OBSERVATION, never FACT
+obs, _ := truth.AdmitOnReceipt(truth.OBSERVATION, truth.Receipt{Payload: result}, "tool:send_email")
+_, err := truth.AdmitOnReceipt(truth.FACT, truth.Receipt{Payload: result}, "") // reject CF-001
+
+// FACT only from a verification of the world in REAL
+fact, _ := truth.Promote(
+    truth.Bearer{Class: truth.HYPOTHESIS, Provenance: truth.DerivedModel},
+    &truth.Verification{VerificationID: "ver-1", AdmittedID: "outbox:msg-1", Environment: truth.REAL},
+)
+```
+
+There is no semver release tag yet, so `go get` resolves a pseudo-version. The normative text is `../a3/spec/SPEC_A3-EP.md`; the conformance tests show every reject code in use.
 
 ## Architecture
 
