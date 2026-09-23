@@ -4,7 +4,7 @@
 
 A Go implementation of A3-EP v0.2.0 written from the normative specification and lock vectors.
 
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/valeriobitzone-png/a3/blob/main/LICENSE) [![Latest tag](https://img.shields.io/github/v/tag/valeriobitzone-png/a3-go?sort=semver)](https://github.com/valeriobitzone-png/a3-go/tags) [![CI](https://github.com/valeriobitzone-png/a3-go/actions/workflows/ci.yml/badge.svg)](https://github.com/valeriobitzone-png/a3-go/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE) [![Latest tag](https://img.shields.io/github/v/tag/valeriobitzone-png/a3-go?sort=semver)](https://github.com/valeriobitzone-png/a3-go/tags) [![CI](https://github.com/valeriobitzone-png/a3-go/actions/workflows/ci.yml/badge.svg)](https://github.com/valeriobitzone-png/a3-go/actions/workflows/ci.yml)
 
 ## What it is
 

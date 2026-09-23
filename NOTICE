@@ -1,0 +1,8 @@
+A3 / a3-go
+
+Copyright 2026 the A3 contributors.
+
+This project is licensed under the Apache License, Version 2.0 (LICENSE).
+The A3-EP specification it implements is published under CC BY 4.0 in the
+a3 repository (spec/LICENSE-CC-BY). Third-party dependencies retain their
+upstream licenses.
