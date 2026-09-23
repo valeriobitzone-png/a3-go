@@ -199,6 +199,50 @@ func TestGO004_TruthLock(t *testing.T) {
 	t.Log("PASS GO-004 truth-vectors + CF-001/002/003/005")
 }
 
+// GO-010 (CS-010): receipt ≠ fact for every receipt form, not only for
+// exit 0 + "SUCCESS". The literal rule is kept as a negative control.
+func TestGO010_ReceiptIsNotFact(t *testing.T) {
+	doc := loadJSON(t, "conformance", "fixtures", "receipt-forms.json").(map[string]any)
+	rule := doc["rule"].(map[string]any)
+	forms := doc["forms"].([]any)
+	if len(forms) < 10 {
+		t.Fatalf("GO-010 only %d forms", len(forms))
+	}
+	literalMisses := 0
+	for _, f := range forms {
+		form := f.(map[string]any)
+		name := form["name"].(string)
+		receipt := form["receipt"].(map[string]any)
+		if b := truth.FromReceipt(truth.Receipt{Payload: receipt}, name); b.Class != truth.OBSERVATION {
+			t.Fatalf("GO-010 %s classified %s", name, b.Class)
+		}
+		for _, c := range rule["claimed_fact_rejects"].([]any) {
+			err := envelope.JudgeReceiptClaim(c.(string), receipt)
+			if e := reject.As(err); e == nil || e.Code != "CF-001" {
+				t.Fatalf("GO-010 %s: FACT %q not rejected with CF-001: %v", name, c, err)
+			}
+			// the exported compatibility function ignores exit code and output
+			exit, _ := receipt["exit_code"].(float64)
+			printed, _ := receipt["printed"].(string)
+			if e := reject.As(truth.RejectReceiptFact(truth.FACT, int(exit), printed)); e == nil || e.Code != "CF-001" {
+				t.Fatalf("GO-010 %s: RejectReceiptFact admitted FACT", name)
+			}
+		}
+		for _, c := range rule["claimed_observation_admits"].([]any) {
+			if err := envelope.JudgeReceiptClaim(c.(string), receipt); err != nil {
+				t.Fatalf("GO-010 %s: OBSERVATION %q rejected: %v", name, c, err)
+			}
+		}
+		if !(receipt["exit_code"] == float64(0) && receipt["printed"] == "SUCCESS") {
+			literalMisses++
+		}
+	}
+	if literalMisses == 0 {
+		t.Fatal("GO-010 forms cannot distinguish the literal SUCCESS rule from the law")
+	}
+	t.Logf("PASS GO-010 receipt != fact over %d forms (literal rule would miss %d)", len(forms), literalMisses)
+}
+
 func TestGO005_ConfidenceLock(t *testing.T) {
 	raw := loadJSON(t, "conformance", "vectors", "v2", "confidence-vectors.json").(map[string]any)
 	fixture := raw["fixture"].(map[string]any)

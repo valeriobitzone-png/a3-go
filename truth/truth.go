@@ -169,9 +169,44 @@ func RejectInventedUnknown(class Class, proposition any) error {
 	return nil
 }
 
+// Receipt is an execution receipt: what a process, tool, HTTP API or MCP
+// server answered. Its content is kept for the record; it is never read to
+// decide a truth class.
+type Receipt struct {
+	Channel  string // "process", "tool", "http", "mcp", ...
+	ExitCode *int   // process receipts only
+	Printed  string // process output, if any
+	Payload  any    // structured result, if any
+}
+
+// FromReceipt applies SPEC_A3-EP §3: an execution receipt is OBSERVATION,
+// whatever it contains.
+func FromReceipt(r Receipt, ref string) Bearer {
+	return Bearer{Class: OBSERVATION, Provenance: ObservedSigned, Ref: ref}
+}
+
+// AdmitOnReceipt admits a claimed class whose basis is a receipt. FACT is
+// rejected with CF-001 whatever the receipt contains; any other claim gets
+// the lawful classification, OBSERVATION.
+func AdmitOnReceipt(claimed Class, r Receipt, ref string) (Bearer, error) {
+	if claimed == FACT {
+		return Bearer{}, rejectReceiptFact()
+	}
+	return FromReceipt(r, ref), nil
+}
+
+func rejectReceiptFact() error {
+	return reject.New("CF-001", "FACT from an execution receipt (a receipt is OBSERVATION whatever it contains)")
+}
+
+// RejectReceiptFact rejects FACT on a receipt (CF-001). The exit code and the
+// printed text are accepted for compatibility and deliberately ignored: until
+// 2026-09-23 this function rejected only exit 0 + "SUCCESS", so a receipt
+// printing "OK" passed as FACT. SPEC_A3-EP §2, §3, §10: receipt ≠ fact.
 func RejectReceiptFact(class Class, exitCode int, printed string) error {
-	if class == FACT && exitCode == 0 && printed == "SUCCESS" {
-		return reject.New("CF-001", "FACT on receipt (exit 0, print SUCCESS)")
+	_, _ = exitCode, printed
+	if class == FACT {
+		return rejectReceiptFact()
 	}
 	return nil
 }

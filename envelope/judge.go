@@ -4,6 +4,8 @@ package envelope
 
 import (
 	"encoding/json"
+	"errors"
+	"strings"
 
 	"github.com/valeriobitzone-png/a3-go/confidence"
 	"github.com/valeriobitzone-png/a3-go/jcs"
@@ -21,15 +23,16 @@ func JudgeFile(raw []byte) error {
 	code, _ := root["reject_code"].(string)
 	switch code {
 	case "CF-001":
+		if kind, _ := root["kind"].(string); kind != "receipt" {
+			return errors.New("CF-001 fixture is not a receipt")
+		}
 		claimed, _ := root["claimed"].(map[string]any)
 		class, _ := claimed["truth_class"].(string)
-		exit, _ := root["exit_code"].(float64)
-		printed, _ := root["printed"].(string)
-		c, _ := truth.ParseBearer(map[string]any{"truth_class": class, "provenance": "observed_signed"})
-		if err := truth.RejectReceiptFact(c.Class, int(exit), printed); err != nil {
+		// the receipt's exit code and printed text do not enter the verdict
+		if err := JudgeReceiptClaim(class, root); err != nil {
 			return err
 		}
-		return reject.New("CF-001", "fixture did not claim FACT on receipt")
+		return errors.New("CF-001 fixture did not claim FACT on receipt")
 	case "CF-002":
 		claimed, _ := root["claimed"].(map[string]any)
 		class, _ := claimed["truth_class"].(string)
@@ -131,6 +134,27 @@ func JudgeFile(raw []byte) error {
 func asMap(v any) map[string]any {
 	m, _ := v.(map[string]any)
 	return m
+}
+
+// JudgeReceiptClaim applies CF-001 to a claim whose basis is a receipt:
+// FACT (any spelling) is rejected whatever the receipt contains; any other
+// valid class is admitted as OBSERVATION (nil). The receipt is not read.
+func JudgeReceiptClaim(claimed string, receipt map[string]any) error {
+	c, err := truth.ParseBearer(map[string]any{
+		"truth_class": strings.TrimSpace(claimed),
+		"provenance":  "observed_signed",
+	})
+	if err != nil {
+		return err
+	}
+	b, err := truth.AdmitOnReceipt(c.Class, truth.Receipt{Payload: receipt}, "")
+	if err != nil {
+		return err
+	}
+	if b.Class != truth.OBSERVATION {
+		return errors.New("receipt classified as " + string(b.Class))
+	}
+	return nil
 }
 
 func stringsToLower(s string) string {
